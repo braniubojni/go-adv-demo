@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"go/adv-demo/configs"
+	"go/adv-demo/internal/hello"
 	"net/http"
 )
 
 func main() {
+	conf := configs.LoadConfig()
 	router := http.NewServeMux()
-	NewHelloHandler(router)
+	hello.NewHelloHandler(router)
 
 	server := http.Server{
 		Addr:    ":8081",
