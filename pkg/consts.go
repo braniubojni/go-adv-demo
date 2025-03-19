@@ -7,3 +7,8 @@ var StatusCode = map[string]int{
 	"BAD_REQUEST":    400,
 	"INTERNAL_ERROR": 500,
 }
+
+type ValidationError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
