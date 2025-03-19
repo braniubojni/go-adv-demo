@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go/adv-demo/configs"
 	"go/adv-demo/pkg"
+	"go/adv-demo/pkg/res"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -30,21 +31,21 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		var payload LoginRequest
 		err := json.NewDecoder(req.Body).Decode(&payload)
 		if err != nil {
-			pkg.Json(w, err.Error(), pkg.StatusCode["BAD_REQUEST"])
+			res.Json(w, err.Error(), pkg.StatusCode["BAD_REQUEST"])
 			return
 		}
 		validate := validator.New()
 		err = validate.Struct(payload)
 		if err != nil {
-			pkg.Json(w, err.Error(), pkg.StatusCode["BAD_REQUEST"])
+			res.Json(w, err.Error(), pkg.StatusCode["BAD_REQUEST"])
 			return
 		}
 
-		res := LoginResponse{
+		response := LoginResponse{
 			Token: "123",
 		}
 
-		pkg.Json(w, res, pkg.StatusCode["SUCCESS"])
+		res.Json(w, response, pkg.StatusCode["SUCCESS"])
 	}
 }
 
