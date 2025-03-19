@@ -1,5 +1,7 @@
 package pkg
 
+import "strings"
+
 var StatusCode = map[string]int{
 	"SUCCESS":        200,
 	"CREATED":        201,
@@ -12,3 +14,6 @@ type ValidationError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
+
+var letters = "abcdefghijklmnopqrstuvwxyz"
+var LETTERS = []rune(letters + strings.ToUpper(letters))
