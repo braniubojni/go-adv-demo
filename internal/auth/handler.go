@@ -6,6 +6,7 @@ import (
 	"go/adv-demo/configs"
 	"go/adv-demo/pkg"
 	"net/http"
+	"regexp"
 )
 
 type AuthHandlerDeps struct {
@@ -31,8 +32,13 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 			pkg.Json(w, err.Error(), pkg.StatusCode["BAD_REQUEST"])
 			return
 		}
-		isLoggedIn := LoginBodyValidation(payload, w)
-		if !isLoggedIn {
+		match, _ := regexp.MatchString(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`, payload.Email)
+		if !match {
+			pkg.Json(w, "Email is wrong", pkg.StatusCode["BAD_REQUEST"])
+			return
+		}
+		if payload.Password == "" {
+			pkg.Json(w, "Password is required", pkg.StatusCode["BAD_REQUEST"])
 			return
 		}
 
