@@ -11,8 +11,11 @@ import (
 
 func main() {
 	conf := configs.LoadConfig()
-	_ = db.NewDb(conf)
+	db := db.NewDb(conf)
 	router := http.NewServeMux()
+
+	// Repositories
+	linkRepository := link.NewLinkRepository(db)
 
 	// Handlers
 	{
@@ -20,7 +23,7 @@ func main() {
 			Config: conf,
 		})
 		link.NewLinkHandler(router, link.LinkHandlerDeps{
-			Config: conf,
+			LinkRepository: linkRepository,
 		})
 	}
 
