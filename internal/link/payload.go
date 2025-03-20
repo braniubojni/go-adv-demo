@@ -1,8 +1,5 @@
 package link
 
 type CreateLinkRequest struct {
-}
-
-type CreateLinkResponse struct {
-	Success bool `json:"success"`
+	Url string `json:"url" validate:"required,url"`
 }

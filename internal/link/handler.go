@@ -2,7 +2,6 @@ package link
 
 import (
 	"fmt"
-	"go/adv-demo/pkg"
 	"go/adv-demo/pkg/req"
 	"go/adv-demo/pkg/res"
 	"net/http"
@@ -32,13 +31,14 @@ func (handler *LinkHandler) Create() http.HandlerFunc {
 		if err != nil {
 			return
 		}
-		fmt.Println(body)
-
-		response := &CreateLinkResponse{
-			Success: true,
+		link := NewLink(body.Url)
+		createdLink, err := handler.LinkRepository.Create(link)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
-		res.Json(w, response, pkg.StatusCode["SUCCESS"])
+		res.Json(w, createdLink, http.StatusOK)
 	}
 }
 

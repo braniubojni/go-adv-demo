@@ -3,7 +3,6 @@ package auth
 import (
 	"fmt"
 	"go/adv-demo/configs"
-	"go/adv-demo/pkg"
 	"go/adv-demo/pkg/req"
 	"go/adv-demo/pkg/res"
 	"net/http"
@@ -36,7 +35,7 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 			Token: "123",
 		}
 
-		res.Json(w, response, pkg.StatusCode["SUCCESS"])
+		res.Json(w, response, http.StatusOK)
 	}
 }
 
@@ -52,6 +51,6 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 			Token: "123",
 		}
 
-		res.Json(w, response, pkg.StatusCode["SUCCESS"])
+		res.Json(w, response, http.StatusOK)
 	}
 }
