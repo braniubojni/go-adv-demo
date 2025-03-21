@@ -40,3 +40,20 @@ func (repo *LinkRepository) Update(link *Link) (*Link, error) {
 	}
 	return link, nil
 }
+
+func (repo *LinkRepository) Delete(id uint) error {
+	result := repo.Database.DB.Delete(&Link{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (repo *LinkRepository) GetById(id uint) bool {
+	var link Link
+	result := repo.Database.DB.First(&link, "id = ?", id)
+	if result.Error != nil {
+		return false
+	}
+	return true
+}
