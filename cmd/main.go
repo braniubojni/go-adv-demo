@@ -28,9 +28,12 @@ func main() {
 		})
 	}
 
+	// Middlwares
+	stack := middleware.Chain(middleware.CORS, middleware.Logging)
+
 	server := http.Server{
 		Addr:    ":8081",
-		Handler: middleware.CORS(middleware.Logging(router)),
+		Handler: stack(router),
 	}
 	fmt.Println("Server on 8081")
 	server.ListenAndServe()
