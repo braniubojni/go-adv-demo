@@ -29,7 +29,10 @@ func main() {
 	}
 
 	// Middlwares
-	stack := middleware.Chain(middleware.CORS, middleware.Logging)
+	stack := middleware.Chain(
+		middleware.CORS,
+		middleware.Logging,
+	)
 
 	server := http.Server{
 		Addr:    ":8081",

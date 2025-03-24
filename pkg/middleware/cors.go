@@ -1,14 +1,13 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 )
 
 func CORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
-		fmt.Println(origin, "origin")
+
 		if origin == "" {
 			next.ServeHTTP(w, r)
 			return
