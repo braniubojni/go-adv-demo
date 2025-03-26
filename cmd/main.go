@@ -17,6 +17,7 @@ func main() {
 
 	// Repositories
 	linkRepository := link.NewLinkRepository(db)
+	// userRepository := user.NewUserRepository(db)
 
 	// Handlers
 	{
