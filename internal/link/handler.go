@@ -30,6 +30,7 @@ func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
 	router.HandleFunc("POST /link", handler.Create())
 	router.HandleFunc("DELETE /link/{id}", handler.Delete())
 	router.Handle("PATCH /link/{id}", middleware.IsLogged(handler.Update(), deps.Config))
+	router.Handle("GET /link", middleware.IsLogged(handler.GetAll(), deps.Config))
 }
 
 func (handler *LinkHandler) Create() http.HandlerFunc {
@@ -70,7 +71,6 @@ func (handler *LinkHandler) GoTo() http.HandlerFunc {
 }
 
 func (handler *LinkHandler) Update() http.HandlerFunc {
-	// userEmail, ok := ctxWithValue.Value(EmailKey).(string)
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := req.HandleBody[UpdateLinkRequest](&w, r)
 		if err != nil {
@@ -126,6 +126,28 @@ func (handler *LinkHandler) Delete() http.HandlerFunc {
 		}
 		res.Json(w, &DeleteResponse{
 			Success: true,
+		}, http.StatusOK)
+	}
+}
+
+func (handler *LinkHandler) GetAll() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+		if err != nil || limit < 0 {
+			http.Error(w, "Invalid limit: must be a non-negative integer", http.StatusBadRequest)
+			return
+		}
+		offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+		if err != nil || offset < 0 {
+			http.Error(w, "Invalid offset: must be a non-negative integer", http.StatusBadRequest)
+			return
+		}
+		links := handler.LinkRepository.GetAll(uint(limit), uint(offset))
+		count := handler.LinkRepository.Count()
+
+		res.Json(w, &GetLinksResponse{
+			Links: links,
+			Count: count,
 		}, http.StatusOK)
 	}
 }
