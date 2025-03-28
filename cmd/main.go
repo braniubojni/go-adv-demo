@@ -5,6 +5,7 @@ import (
 	"go/adv-demo/configs"
 	"go/adv-demo/internal/auth"
 	"go/adv-demo/internal/link"
+	"go/adv-demo/internal/stat"
 	"go/adv-demo/internal/user"
 	"go/adv-demo/pkg/db"
 	"go/adv-demo/pkg/jwt"
@@ -20,6 +21,7 @@ func main() {
 	// Repositories
 	linkRepository := link.NewLinkRepository(db)
 	userRepository := user.NewUserRepository(db)
+	statRepository := stat.NewStatRepository(db)
 
 	// Services
 	authService := auth.NewAuthRepository(userRepository)
@@ -33,6 +35,7 @@ func main() {
 			JWT:         jwt,
 		})
 		link.NewLinkHandler(router, link.LinkHandlerDeps{
+			StatRepository: statRepository,
 			LinkRepository: linkRepository,
 			Config:         conf,
 		})
