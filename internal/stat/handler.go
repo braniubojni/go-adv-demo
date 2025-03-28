@@ -1,9 +1,9 @@
 package stat
 
 import (
-	"fmt"
 	"go/adv-demo/configs"
 	"go/adv-demo/pkg/middleware"
+	"go/adv-demo/pkg/res"
 	"net/http"
 	"slices"
 	"time"
@@ -19,7 +19,12 @@ type StatHandler struct {
 	Config         *configs.Config
 }
 
-var BY = []string{"month", "day"}
+const (
+	GroupByMonth = "month"
+	GroupByDay   = "day"
+)
+
+var BY = []string{GroupByMonth, GroupByDay}
 
 func NewStatHandler(router *http.ServeMux, deps StatHandlerDeps) {
 	handler := &StatHandler{
@@ -48,8 +53,7 @@ func (handler *StatHandler) GetAll() http.HandlerFunc {
 			return
 		}
 
-		fmt.Println(from, to, by, "from&to")
-		// if err != nil || (from < 0 || to < 0 || !slices.Contains(BY, by)) {
-		// }
+		stats := handler.StatRepository.GetStats(by, from, to)
+		res.Json(w, stats, http.StatusOK)
 	}
 }
