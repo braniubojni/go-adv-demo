@@ -14,7 +14,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func App() http.Handler {
 	conf := configs.LoadConfig()
 	db := db.NewDb(conf)
 	router := http.NewServeMux()
@@ -33,23 +33,24 @@ func main() {
 		StatRepository: statRepository,
 	})
 
+	// Events
+	go statService.AddClick()
+
 	// Handlers
-	{
-		auth.NewAuthHandler(router, auth.AuthHandlerDeps{
-			Config:      conf,
-			AuthService: authService,
-			JWT:         jwt,
-		})
-		link.NewLinkHandler(router, link.LinkHandlerDeps{
-			EventBus:       eventBus,
-			LinkRepository: linkRepository,
-			Config:         conf,
-		})
-		stat.NewStatHandler(router, stat.StatHandlerDeps{
-			StatRepository: statRepository,
-			Config:         conf,
-		})
-	}
+	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
+		Config:      conf,
+		AuthService: authService,
+		JWT:         jwt,
+	})
+	link.NewLinkHandler(router, link.LinkHandlerDeps{
+		EventBus:       eventBus,
+		LinkRepository: linkRepository,
+		Config:         conf,
+	})
+	stat.NewStatHandler(router, stat.StatHandlerDeps{
+		StatRepository: statRepository,
+		Config:         conf,
+	})
 
 	// Middlwares
 	stack := middleware.Chain(
@@ -57,13 +58,16 @@ func main() {
 		middleware.Logging,
 	)
 
+	return stack(router)
+}
+
+func main() {
+	app := App()
 	server := http.Server{
 		Addr:    ":8081",
-		Handler: stack(router),
+		Handler: app,
 	}
 
-	go statService.AddClick()
 	fmt.Println("Server on 8081")
-
 	server.ListenAndServe()
 }
