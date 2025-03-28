@@ -45,6 +45,10 @@ func main() {
 			LinkRepository: linkRepository,
 			Config:         conf,
 		})
+		stat.NewStatHandler(router, stat.StatHandlerDeps{
+			StatRepository: statRepository,
+			Config:         conf,
+		})
 	}
 
 	// Middlwares
