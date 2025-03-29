@@ -1,8 +1,6 @@
 package jwt
 
 import (
-	"fmt"
-
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -25,7 +23,6 @@ func (j *JWT) Create(data JWTData) (string, error) {
 		"email": data.Email,
 	})
 
-	fmt.Println(j.Secret, "secret")
 	s, err := t.SignedString([]byte(j.Secret))
 	if err != nil {
 		return "", err

@@ -1,0 +1,16 @@
+services:
+  postgres:
+    container_name: postgres_test_go
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: postgres_test
+      POSTGRES_PASSWORD: my_pass_test
+      POSTGRES_DB: test_db
+      PGDATA: /data/postgres
+    volumes:
+      - pgdata:/data/postgres
+    ports:
+      - '5432:5432'
+
+volumes:
+  pgdata:
